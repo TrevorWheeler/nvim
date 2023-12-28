@@ -4,6 +4,36 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- if vim.fn.executable('C:\\Program Files\\Git\\bin\\bash.exe') == 1 then
+--   vim.o.shell = 'C:\\Program Files\\Git\\bin\\bash.exe'
+--   vim.o.shellcmdflag = '-c'
+-- end
+
+-- if vim.fn.executable('C:\\Program Files\\Git\\bin\\bash.exe') == 1 then
+--   vim.o.shell = 'C:\\Windows\\System32\\cmd.exe'
+--   vim.o.shellcmdflag = '-c'
+-- end
+-- vim.o.shell = 'cmd.exe /C "C:\\Program Files\\Git\\bin\\bash.exe"  -i -l'
+
+-- vim.o.shell = 'C:Program Files\\Git\\bin\\bash.exe'
+-- vim.o.shellcmdflag = '-c'
+
+
+
+-- if vim.fn.executable('C:\\Program Files\\Git\\bin\\bash.exe') == 1 then
+--   vim.o.shell = 'C:\\Program Files\\Git\\bin\\bash.exe  -i -l'
+--   vim.o.shellcmdflag = '-c'
+-- end
+-- vim.o.shell = 'cmd.exe'
+-- vim.o.shell = 'C:\\Program Files\\Git\\bin\\sh.exe'
+-- or
+-- vim.o.shell = 'C:/Program Files/Git/bin/bash.exe'
+-- if vim.fn.executable('C:\\Program Files\\Git\\bin\\bash.exe') == 1 then
+--   vim.o.shell = 'C:\\Windows\\System32\\cmd.exe'
+--   vim.o.shellcmdflag = '-c'
+-- end
+
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -48,7 +78,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim',       opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -73,7 +103,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',  opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -214,6 +244,65 @@ require('lazy').setup({
     build = ':TSUpdate',
   },
 
+  {
+    "theprimeagen/harpoon",
+    branch = "harpoon2",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("harpoon"):setup()
+    end,
+    keys = {
+      { "<leader>A", function() require("harpoon"):list():append() end,  desc = "harpoon file", },
+      {
+        "<leader>a",
+        function()
+          local harpoon = require("harpoon")
+          harpoon.ui:toggle_quick_menu(harpoon:list())
+        end,
+        desc = "harpoon quick menu",
+      },
+      { "<leader>1", function() require("harpoon"):list():select(1) end, desc = "harpoon to file 1", },
+      { "<leader>2", function() require("harpoon"):list():select(2) end, desc = "harpoon to file 2", },
+      { "<leader>3", function() require("harpoon"):list():select(3) end, desc = "harpoon to file 3", },
+      { "<leader>4", function() require("harpoon"):list():select(4) end, desc = "harpoon to file 4", },
+      { "<leader>5", function() require("harpoon"):list():select(5) end, desc = "harpoon to file 5", },
+    },
+  },
+
+
+
+
+  {
+    -- amongst your other plugins
+    -- {'akinsho/toggleterm.nvim', version = "*", config = true}
+    -- or
+    {
+      'akinsho/toggleterm.nvim',
+      version = "*",
+      congifg = true,
+      opts = {
+        -- open_mapping = [[<C-\\>]],
+        start_in_insert = true,
+        direction = 'float',
+        -- shell = vim.o.shell
+        -- size = 20,
+        open_mapping = [[<c-\>]],
+        -- hide_numbers = true,
+        -- shade_terminals = true,
+        -- shading_factor = 2,
+        -- start_in_insert = true,
+        -- insert_mappings = true,
+        -- persist_size = true,
+        -- direction = 'horizontal',
+        -- close_on_exit = true,
+        -- shell = 'C:\\Program Files\\Git\\bin\\bash.exe', -- Adjust this path
+        -- shellcmdflag = '--login -i -c'
+      }
+    }
+  },
+
+
+
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
@@ -270,6 +359,33 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+
+
+vim.o.guicursor = ""
+
+vim.o.nu = true
+vim.o.relativenumber = true
+
+vim.o.tabstop = 4
+vim.o.softtabstop = 4
+vim.o.shiftwidth = 4
+vim.o.expandtab = true
+
+vim.o.smartindent = true
+vim.o.wrap = false
+vim.o.swapfile = false
+vim.o.backup = false
+-- vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
+vim.o.undofile = true
+
+vim.o.incsearch = true
+vim.o.termguicolors = true
+vim.o.scrolloff = 8
+vim.o.signcolumn = "yes"
+vim.o.updatetime = 50
+vim.o.colorcolumn = "80"
+
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -285,6 +401,69 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous dia
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
+
+
+-- Terminal
+vim.keymap.set("n", "<C-t>", ":ToggleTerm<CR>", { noremap = true, silent = true })
+vim.keymap.set('t', '<C-t>', '<C-\\><C-n>:ToggleTerm<CR>', { noremap = true, silent = true })
+
+
+
+-- go to Netrw Directory Listing
+vim.keymap.set('n', '<leader>pv', vim.cmd.Ex)
+-- move highlighted
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+
+vim.keymap.set("n", "J", "mzJ`z")
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
+vim.keymap.set("n", "n", "nzzzv")
+vim.keymap.set("n", "N", "Nzzzv")
+
+-- greatest remap ever
+vim.keymap.set("x", "<leader>p", [["_dP]])
+
+-- next greatest remap ever : asbjornHaland
+vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
+vim.keymap.set("n", "<leader>Y", [["+Y]])
+
+vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
+
+-- This is going to get me cancelled
+vim.keymap.set("i", "<C-c>", "<Esc>")
+
+vim.keymap.set("n", "Q", "<nop>")
+vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
+vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
+
+vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
+vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
+vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
+vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
+
+vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
+
+vim.keymap.set("n", "<leader>vpp", "<cmd>e ~/.dotfiles/nvim/.config/nvim/lua/theprimeagen/packer.lua<CR>");
+vim.keymap.set("n", "<leader>mr", "<cmd>CellularAutomaton make_it_rain<CR>");
+
+vim.keymap.set("n", "<leader><leader>", function()
+  vim.cmd("so")
+end)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -383,7 +562,7 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', 'vue' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
@@ -433,15 +612,15 @@ vim.defer_fn(function()
           ['[]'] = '@class.outer',
         },
       },
-      swap = {
-        enable = true,
-        swap_next = {
-          ['<leader>a'] = '@parameter.inner',
-        },
-        swap_previous = {
-          ['<leader>A'] = '@parameter.inner',
-        },
-      },
+      -- swap = {
+      --   enable = true,
+      --   swap_next = {
+      --     ['<leader>a'] = '@parameter.inner',
+      --   },
+      --   swap_previous = {
+      --     ['<leader>A'] = '@parameter.inner',
+      --   },
+      -- },
     },
   }
 end, 0)
@@ -619,3 +798,7 @@ cmp.setup {
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+-- allow git bash to work in toggleterminal
+vim.cmd [[let &shell = '"C:\\Program Files\\Git\\bin\\bash.exe"']]
+vim.cmd [[let &shellcmdflag = '-s']]
