@@ -4,36 +4,6 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
--- if vim.fn.executable('C:\\Program Files\\Git\\bin\\bash.exe') == 1 then
---   vim.o.shell = 'C:\\Program Files\\Git\\bin\\bash.exe'
---   vim.o.shellcmdflag = '-c'
--- end
-
--- if vim.fn.executable('C:\\Program Files\\Git\\bin\\bash.exe') == 1 then
---   vim.o.shell = 'C:\\Windows\\System32\\cmd.exe'
---   vim.o.shellcmdflag = '-c'
--- end
--- vim.o.shell = 'cmd.exe /C "C:\\Program Files\\Git\\bin\\bash.exe"  -i -l'
-
--- vim.o.shell = 'C:Program Files\\Git\\bin\\bash.exe'
--- vim.o.shellcmdflag = '-c'
-
-
-
--- if vim.fn.executable('C:\\Program Files\\Git\\bin\\bash.exe') == 1 then
---   vim.o.shell = 'C:\\Program Files\\Git\\bin\\bash.exe  -i -l'
---   vim.o.shellcmdflag = '-c'
--- end
--- vim.o.shell = 'cmd.exe'
--- vim.o.shell = 'C:\\Program Files\\Git\\bin\\sh.exe'
--- or
--- vim.o.shell = 'C:/Program Files/Git/bin/bash.exe'
--- if vim.fn.executable('C:\\Program Files\\Git\\bin\\bash.exe') == 1 then
---   vim.o.shell = 'C:\\Windows\\System32\\cmd.exe'
---   vim.o.shellcmdflag = '-c'
--- end
-
-
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -317,18 +287,6 @@ require('lazy').setup({
   },
 
 
-  {
-    'nvim-lualine/lualine.nvim',
-    branch = "*",
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
-    config = function()
-      require('lualine').setup({
-        options = {
-          theme = 'dracula'
-        }
-      })
-    end
-  }
 
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
@@ -408,7 +366,7 @@ vim.o.undofile = true
 
 vim.o.incsearch = true
 vim.o.termguicolors = true
-vim.o.scrolloff = 8
+vim.o.scrolloff = 28
 vim.o.signcolumn = "yes"
 vim.o.updatetime = 50
 vim.o.colorcolumn = "80"
@@ -829,5 +787,5 @@ cmp.setup {
 -- vim: ts=2 sts=2 sw=2 et
 
 -- allow git bash to work in toggleterminal
-vim.cmd [[let &shell = '"C:\\Program Files\\Git\\bin\\bash.exe"']]
-vim.cmd [[let &shellcmdflag = '-s']]
+-- vim.cmd [[let &shell = '"C:\\Program Files\\Git\\bin\\bash.exe"']]
+-- vim.cmd [[let &shellcmdflag = '-s']]
