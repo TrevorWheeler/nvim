@@ -276,7 +276,7 @@ require('lazy').setup({
     {
       'akinsho/toggleterm.nvim',
       version = "*",
-      congifg = true,
+      config = true,
       opts = {
         start_in_insert = true,
         direction = 'float',
@@ -288,7 +288,7 @@ require('lazy').setup({
   {
     {
       'nvimtools/none-ls.nvim',
-      configg = function()
+      config = function()
         local null_ls = require("null-ls")
         null_ls.setup({
           sources = {
@@ -298,12 +298,37 @@ require('lazy').setup({
             null_ls.builtins.completion.spell,
           }
         })
+        vim.keymap.set('n', '<leader>gf', vim.lsp.buf.format, {})
       end,
     }
   },
 
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons",
+      "MunifTanjim/nui.nvim",
+    },
+    config = function()
+      vim.keymap.set('n', '<C-n>', ':Neotree filesystem reveal left<CR>', {})
+    end,
+  },
 
-  vim.keymap.set('n', '<leader>gf', vim.lsp.buf.format, {})
+
+  {
+    'nvim-lualine/lualine.nvim',
+    branch = "*",
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      require('lualine').setup({
+        options = {
+          theme = 'dracula'
+        }
+      })
+    end
+  }
 
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
@@ -409,6 +434,7 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- Terminal
 vim.keymap.set("n", "<C-t>", ":ToggleTerm<CR>", { noremap = true, silent = true })
 vim.keymap.set('t', '<C-t>', '<C-\\><C-n>:ToggleTerm<CR>', { noremap = true, silent = true })
+
 
 
 
