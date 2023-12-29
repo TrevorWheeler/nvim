@@ -271,36 +271,39 @@ require('lazy').setup({
 
 
 
-
+  -- Toggle terminal
   {
-    -- amongst your other plugins
-    -- {'akinsho/toggleterm.nvim', version = "*", config = true}
-    -- or
     {
       'akinsho/toggleterm.nvim',
       version = "*",
       congifg = true,
       opts = {
-        -- open_mapping = [[<C-\\>]],
         start_in_insert = true,
         direction = 'float',
-        -- shell = vim.o.shell
-        -- size = 20,
         open_mapping = [[<c-\>]],
-        -- hide_numbers = true,
-        -- shade_terminals = true,
-        -- shading_factor = 2,
-        -- start_in_insert = true,
-        -- insert_mappings = true,
-        -- persist_size = true,
-        -- direction = 'horizontal',
-        -- close_on_exit = true,
-        -- shell = 'C:\\Program Files\\Git\\bin\\bash.exe', -- Adjust this path
-        -- shellcmdflag = '--login -i -c'
       }
     }
   },
 
+  {
+    {
+      'nvimtools/none-ls.nvim',
+      configg = function()
+        local null_ls = require("null-ls")
+        null_ls.setup({
+          sources = {
+            null_ls.builtins.formatting.stylua,
+            null_ls.builtins.formatting.prettier,
+            null_ls.builtins.diagnostics.eslint_d,
+            null_ls.builtins.completion.spell,
+          }
+        })
+      end,
+    }
+  },
+
+
+  vim.keymap.set('n', '<leader>gf', vim.lsp.buf.format, {})
 
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
@@ -547,7 +550,7 @@ local function telescope_live_grep_open_files()
 end
 vim.keymap.set('n', '<leader>s/', telescope_live_grep_open_files, { desc = '[S]earch [/] in Open Files' })
 vim.keymap.set('n', '<leader>ss', require('telescope.builtin').builtin, { desc = '[S]earch [S]elect Telescope' })
-vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
+-- vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
@@ -564,8 +567,8 @@ vim.defer_fn(function()
     -- Add languages to be installed here that you want installed for treesitter
     ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', 'vue' },
 
-    -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-    auto_install = false,
+    -- Autoinstall languages that are not installed.
+    auto_install = true,
 
     highlight = { enable = true },
     indent = { enable = true },
