@@ -1,9 +1,5 @@
--- Set <space> as the leader key
--- See `:help mapleader`
---  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -52,8 +48,14 @@ require('lazy').setup({
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
     },
+    opts = {
+      autoformat = true,
+      format = {
+        formatting_options = nil,
+        timeout_ms = nil,
+      }
+    },
   },
-
   {
     -- Autocompletion
     'hrsh7th/nvim-cmp',
@@ -450,7 +452,6 @@ vim.keymap.set({ 'n', 'v' }, '<leader>d', [["_d]])
 vim.keymap.set('i', '<C-c>', '<Esc>')
 
 vim.keymap.set('n', 'Q', '<nop>')
-vim.keymap.set('n', '<C-f>', '<cmd>silent !tmux neww tmux-sessionizer<CR>')
 vim.keymap.set('n', '<leader>f', vim.lsp.buf.format)
 
 vim.keymap.set('n', '<C-k>', '<cmd>cnext<CR>zz')
@@ -461,8 +462,9 @@ vim.keymap.set('n', '<leader>j', '<cmd>lprev<CR>zz')
 vim.keymap.set('n', '<leader>s', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 vim.keymap.set('n', '<leader>x', '<cmd>!chmod +x %<CR>', { silent = true })
 
-vim.keymap.set('n', '<leader>vpp', '<cmd>e ~/.dotfiles/nvim/.config/nvim/lua/theprimeagen/packer.lua<CR>')
-vim.keymap.set('n', '<leader>mr', '<cmd>CellularAutomaton make_it_rain<CR>')
+-- save map'
+vim.keymap.set('n', '<C-s>', ':w<CR>', { silent = true })
+-- vim.keymap.set('i', '<C-s>', ':w<CR>')
 
 vim.keymap.set('n', '<leader><leader>', function()
   vim.cmd 'so'
