@@ -6,10 +6,10 @@ return {
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = 'github_dark',
         component_separators = '|',
         section_separators = '',
       },
     },
-  },
+ },
 }
