@@ -6,7 +6,7 @@ return {
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'github_dark',
+        theme = 'gruvbox-material',
         component_separators = '|',
         section_separators = '',
       },
