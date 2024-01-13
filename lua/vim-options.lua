@@ -1,5 +1,4 @@
-
--- See `:help vim.o`
+-- see `:help vim.o`
 
 -- Set highlight on search
 vim.o.hlsearch = false
