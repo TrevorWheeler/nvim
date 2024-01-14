@@ -1,17 +1,9 @@
--- return {
---   'projekt0n/github-nvim-theme',
---   lazy = false, -- make sure we load this during startup if it is your main colorscheme
---   priority = 1000,
---   config = function()
---     vim.cmd 'colorscheme github_dark'
---   end,
--- }
 return {
   'sainnhe/gruvbox-material',
   priority = 1000,
   config = function()
     vim.o.background = 'dark' -- or "light" for light mode
-    vim.cmd "let g:gruvbox_material_background= 'hard'"
+    vim.cmd "let g:gruvbox_material_background= 'light'"
     vim.cmd 'let g:gruvbox_material_transparent_background=2'
     vim.cmd 'let g:gruvbox_material_diagnostic_line_highlight=1'
     vim.cmd "let g:gruvbox_material_diagnostic_virtual_text='colored'"

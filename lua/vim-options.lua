@@ -55,7 +55,7 @@ vim.o.termguicolors = true
 vim.o.scrolloff = 28
 vim.o.signcolumn = 'yes'
 vim.o.updatetime = 50
-vim.o.colorcolumn = '80'
+-- vim.o.colorcolumn = '80'
 
 
 -- [[ Highlight on yank ]]
