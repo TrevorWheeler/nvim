@@ -2,7 +2,7 @@ return {
   {
     'theprimeagen/harpoon',
     branch = 'harpoon2',
-    lazy = false,
+    lazy = true,
     config = true,
     keys = {
       {
