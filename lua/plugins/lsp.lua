@@ -29,6 +29,9 @@ return {
       lspconfig.lua_ls.setup {
         capabilities = capabilities,
       }
+      lspconfig.gopls.setup {
+        capabilities = capabilities,
+      }
       lspconfig.rust_analyzer.setup {
         -- Server-specific settings. See `:help lspconfig-setup`
         settings = {
@@ -37,13 +40,6 @@ return {
       }
       lspconfig.volar.setup {
         capabilities = capabilities,
-        -- init_options = {
-        --   typescript = {
-        --     tsdk = '/home/trev/.npm/lib/node_modules/typescript/lib',
-        --     -- Alternative location if installed as root:
-        --     -- tsdk = '/usr/local/lib/node_modules/typescript/lib'
-        --   },
-        -- },
       }
 
       vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
@@ -54,12 +50,3 @@ return {
   },
 }
 
--- require'lspconfig'.volar.setup{
---   init_options = {
---     typescript = {
---       tsdk = '/path/to/.npm/lib/node_modules/typescript/lib'
---       -- Alternative location if installed as root:
---       -- tsdk = '/usr/local/lib/node_modules/typescript/lib'
---     }
---   }
--- }
