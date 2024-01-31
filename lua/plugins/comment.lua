@@ -1,9 +1,7 @@
 return {
-  -- "gc" to comment visual regions/lines
   {
     'numToStr/Comment.nvim',
-    opts = {
-      ---Add a space b/w comment and the line
+    opts = {      ---Add a space b/w comment and the line
       padding = true,
       ---Whether the cursor should stay at its position
       sticky = true,
@@ -38,7 +36,7 @@ return {
         ---Operator-pending mapping; `gcc` `gbc` `gc[count]{motion}` `gb[count]{motion}`
         basic = true,
         ---Extra mapping; `gco`, `gcO`, `gcA`
-        extra = true,
+        -- extra = true,
       },
       ---Function to call before (un)comment
       pre_hook = nil,

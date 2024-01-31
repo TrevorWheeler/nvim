@@ -28,3 +28,10 @@ vim.keymap.set('n', '<leader>s', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><
 -- Join line with current and jump cursor to original position
 vim.keymap.set('n', 'J', 'mzJz')
 
+vim.keymap.set('n', '<leader>v', '<cmd>:vnew<CR>', {silent = true })
+-- Navigate splits
+vim.keymap.set('n', '<c-k>', ':wincmd k<CR>', {silent = true})
+vim.keymap.set('n', '<c-j>', ':wincmd j<CR>', {silent = true})
+vim.keymap.set('n', '<c-h>', ':wincmd h<CR>', {silent = true})
+vim.keymap.set('n', '<c-l>', ':wincmd l<CR>', {silent = true})
+
