@@ -17,23 +17,27 @@ return {
     'neovim/nvim-lspconfig',
     lazy = false,
     config = function()
+      -- Server-specific settings. See `:help lspconfig-setup`
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
       local lspconfig = require 'lspconfig'
+
       lspconfig.tsserver.setup {
         capabilities = capabilities,
       }
+
       lspconfig.html.setup {
         capabilities = capabilities,
       }
+
       lspconfig.lua_ls.setup {
         capabilities = capabilities,
       }
+
       lspconfig.gopls.setup {
         capabilities = capabilities,
       }
+
       lspconfig.rust_analyzer.setup {
-        -- Server-specific settings. See `:help lspconfig-setup`
         settings = {
           ['rust-analyzer'] = {},
         },
@@ -49,4 +53,3 @@ return {
     end,
   },
 }
-
