@@ -1,18 +1,52 @@
 return {
-  'sainnhe/gruvbox-material',
+  'catppuccin/nvim',
+  name = 'catppuccin',
   priority = 1000,
   config = function()
-    vim.o.background = 'dark' -- or "light" for light mode
-    vim.cmd "let g:gruvbox_material_background= 'light'"
-    vim.cmd 'let g:gruvbox_material_transparent_background=2'
-    vim.cmd 'let g:gruvbox_material_diagnostic_line_highlight=1'
-    vim.cmd "let g:gruvbox_material_diagnostic_virtual_text='colored'"
-    vim.cmd 'let g:gruvbox_material_enable_bold=1'
-    vim.cmd 'let g:gruvbox_material_enable_italic=1'
-    vim.cmd [[colorscheme gruvbox-material]] -- Set color scheme
-    -- changing bg and border colors
-    vim.api.nvim_set_hl(0, 'FloatBorder', { link = 'Normal' })
-    vim.api.nvim_set_hl(0, 'LspInfoBorder', { link = 'Normal' })
-    vim.api.nvim_set_hl(0, 'NormalFloat', { link = 'Normal' })
+    require('catppuccin').setup {
+      flavour = 'mocha', -- latte, frappe, macchiato, mocha
+      background = { -- :h background
+        light = 'latte',
+        dark = 'mocha',
+      },
+      transparent_background = true,
+      show_end_of_buffer = false, -- show the '~' characters after the end of buffers
+      term_colors = false,
+      dim_inactive = {
+        enabled = false,
+        shade = 'dark',
+        percentage = 0.15,
+      },
+      no_italic = false, -- Force no italic
+      no_bold = false, -- Force no bold
+      styles = {
+        comments = { 'italic' },
+        conditionals = { 'italic' },
+        loops = {},
+        functions = {},
+        keywords = {},
+        strings = {},
+        variables = {},
+        numbers = {},
+        booleans = {},
+        properties = {},
+        types = {},
+        operators = {},
+      },
+      color_overrides = {},
+      custom_highlights = {},
+      integrations = {
+        cmp = true,
+        gitsigns = true,
+        nvimtree = true,
+        telescope = true,
+        notify = false,
+        mini = false,
+        -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+      },
+    }
+
+    -- setup must be called before loading
+    vim.cmd.colorscheme 'catppuccin'
   end,
 }
