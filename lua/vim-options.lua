@@ -54,7 +54,7 @@ vim.o.incsearch = true
 vim.o.termguicolors = true
 vim.o.scrolloff = 28
 vim.o.signcolumn = 'yes'
-vim.o.updatetime = 50
+
 -- vim.o.colorcolumn = '80'
 
 -- [[ Highlight on yank ]]
@@ -71,3 +71,4 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- Disable comment on new line
 vim.cmd 'autocmd BufEnter * set formatoptions-=cro'
 vim.cmd 'autocmd BufEnter * setlocal formatoptions-=cro'
+
