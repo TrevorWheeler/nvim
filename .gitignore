@@ -12,3 +12,10 @@ spell/
 lazy-lock.json
 
 .DS_Store
+# Neovim / Vim
+*.swp
+*.swo
+undo/
+.netrwhist
+
+/lazy/
