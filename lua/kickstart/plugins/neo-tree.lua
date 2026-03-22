@@ -14,11 +14,32 @@ return {
   lazy = false,
   keys = {
     { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
+    { '<leader>gs', ':Neotree git_status<CR>', desc = '[G]it [S]tatus tree', silent = true },
   },
   ---@module 'neo-tree'
   ---@type neotree.Config
   opts = {
+    default_component_configs = {
+      diagnostics = {
+        symbols = {
+          hint = '󰌵',
+          info = '',
+          warn = '',
+          error = '',
+        },
+        highlights = {
+          hint = 'DiagnosticSignHint',
+          info = 'DiagnosticSignInfo',
+          warn = 'DiagnosticSignWarn',
+          error = 'DiagnosticSignError',
+        },
+      },
+    },
     filesystem = {
+      filtered_items = {
+        hide_dotfiles = false,
+        hide_gitignored = true,
+      },
       window = {
         mappings = {
           ['\\'] = 'close_window',

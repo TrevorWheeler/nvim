@@ -2,11 +2,9 @@ return {
   "sindrets/diffview.nvim",
   cmd = { "DiffviewOpen", "DiffviewFileHistory" },
   keys = {
-    { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "[G]it [D]iffview" },
-    { "<leader>gh", "<cmd>DiffviewFileHistory %<cr>", desc = "[G]it file [H]istory" },
-    { "<leader>gH", "<cmd>DiffviewFileHistory<cr>", desc = "[G]it branch [H]istory" },
+    { "<leader>gd", "<cmd>DiffviewOpen -- %<cr>", desc = "[G]it [D]iff current file" },
     {
-      "<leader>ga",
+      "<leader>gg",
       function()
         local pickers = require("telescope.pickers")
         local finders = require("telescope.finders")
@@ -14,27 +12,38 @@ return {
         local actions = require("telescope.actions")
         local action_state = require("telescope.actions.state")
         local previewers = require("telescope.previewers")
+        local entry_display = require("telescope.pickers.entry_display")
 
         local trevy_root = vim.fn.expand("~/code/trevy")
         local results = {}
 
-        -- Find all git repos and their changed files
         local repos = vim.fn.globpath(trevy_root, "*/.git", false, true)
         for _, git_dir in ipairs(repos) do
           local repo_path = vim.fn.fnamemodify(git_dir, ":h")
           local repo_name = vim.fn.fnamemodify(repo_path, ":t")
-          local status = vim.fn.systemlist("git -C " .. vim.fn.shellescape(repo_path) .. " status --short")
+          local status = vim.fn.systemlist("git -C " .. vim.fn.shellescape(repo_path) .. " status --porcelain")
           for _, line in ipairs(status) do
             if line ~= "" then
-              local status_code = line:sub(1, 2)
+              local index_status = line:sub(1, 1)
+              local worktree_status = line:sub(2, 2)
               local file = line:sub(4)
+
+              local stage
+              if index_status ~= " " and index_status ~= "?" then
+                stage = "staged"
+              else
+                stage = "unstaged"
+              end
+
+              local status_code = vim.trim(line:sub(1, 2))
+
               table.insert(results, {
                 repo_name = repo_name,
                 repo_path = repo_path,
-                status = vim.trim(status_code),
+                status = status_code,
+                stage = stage,
                 file = file,
                 full_path = repo_path .. "/" .. file,
-                display = string.format("%-18s %s %s", repo_name, status_code, file),
               })
             end
           end
@@ -45,16 +54,50 @@ return {
           return
         end
 
+        -- Sort: group by repo, then staged before unstaged
+        table.sort(results, function(a, b)
+          if a.repo_name ~= b.repo_name then return a.repo_name < b.repo_name end
+          if a.stage ~= b.stage then return a.stage == "staged" end
+          return a.file < b.file
+        end)
+
+        local displayer = entry_display.create({
+          separator = " ",
+          items = {
+            { width = 16 },
+            { width = 8 },
+            { width = 4 },
+            { remaining = true },
+          },
+        })
+
         pickers.new({}, {
           prompt_title = "Trevy Changes (all repos)",
           finder = finders.new_table({
             results = results,
             entry_maker = function(entry)
+              local stage_hl = entry.stage == "staged" and "DiagnosticOk" or "DiagnosticWarn"
+              local status_hl = "DiagnosticError"
+              if entry.status == "??" then
+                status_hl = "DiagnosticHint"
+              elseif entry.status == "A" then
+                status_hl = "DiagnosticOk"
+              elseif entry.status == "D" then
+                status_hl = "DiagnosticError"
+              end
+
               return {
                 value = entry,
-                display = entry.display,
-                ordinal = entry.repo_name .. " " .. entry.file,
+                ordinal = entry.repo_name .. " " .. entry.stage .. " " .. entry.file,
                 filename = entry.full_path,
+                display = function()
+                  return displayer({
+                    { entry.repo_name, "TelescopeResultsIdentifier" },
+                    { entry.stage, stage_hl },
+                    { entry.status, status_hl },
+                    { entry.file },
+                  })
+                end,
               }
             end,
           }),
@@ -65,17 +108,20 @@ return {
               if e.status == "??" then
                 return { "cat", e.full_path }
               end
+              if e.stage == "staged" then
+                return { "git", "-C", e.repo_path, "diff", "--cached", "--", e.file }
+              end
               return { "git", "-C", e.repo_path, "diff", "--", e.file }
             end,
           }),
           attach_mappings = function(prompt_bufnr, map)
-            -- Enter opens the file
             actions.select_default:replace(function()
               local selection = action_state.get_selected_entry()
               actions.close(prompt_bufnr)
-              vim.cmd("edit " .. vim.fn.fnameescape(selection.value.full_path))
+              local e = selection.value
+              vim.cmd("cd " .. vim.fn.fnameescape(e.repo_path))
+              vim.cmd("DiffviewOpen -- " .. vim.fn.fnameescape(e.file))
             end)
-            -- Ctrl-d opens diffview for that repo
             map("i", "<C-d>", function()
               local selection = action_state.get_selected_entry()
               actions.close(prompt_bufnr)
@@ -92,7 +138,7 @@ return {
           end,
         }):find()
       end,
-      desc = "[G]it [A]ll repos changes",
+      desc = "[G]it [G]lobal changes",
     },
   },
   opts = {},
