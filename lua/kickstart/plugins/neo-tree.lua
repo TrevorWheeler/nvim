@@ -43,6 +43,11 @@ return {
       window = {
         mappings = {
           ['\\'] = 'close_window',
+          ['T'] = function(state)
+            local node = state.tree:get_node()
+            local path = node.type == 'directory' and node.path or vim.fn.fnamemodify(node.path, ':h')
+            require('toggleterm.terminal').Terminal:new({ dir = path, direction = 'horizontal' }):toggle()
+          end,
         },
       },
     },

@@ -106,6 +106,19 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+vim.keymap.set("n", "<leader>td", "<cmd>edit ~/code/trevy/todos/todos.md<cr>", { desc = "[T]odo [D]oc" })
+vim.keymap.set("n", "<leader>qq", "<cmd>qa<cr>", { desc = "[Q]uit all" })
+vim.keymap.set("n", "<leader>ye", function()
+  local diagnostics = vim.diagnostic.get(0, { lnum = vim.fn.line(".") - 1 })
+  if #diagnostics == 0 then
+    vim.notify("No diagnostics on this line", vim.log.levels.INFO)
+    return
+  end
+  local msg = diagnostics[1].message
+  vim.fn.setreg("+", msg)
+  vim.notify("Yanked: " .. msg, vim.log.levels.INFO)
+end, { desc = "[Y]ank [E]rror" })
+
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
   group = vim.api.nvim_create_augroup("CheckExternalChanges", { clear = true }),
   callback = function()
