@@ -19,6 +19,12 @@ return {
   ---@module 'neo-tree'
   ---@type neotree.Config
   opts = {
+    sources = {
+      'filesystem',
+      'buffers',
+      'git_status',
+      'trevy_changes',
+    },
     default_component_configs = {
       diagnostics = {
         symbols = {
@@ -48,6 +54,24 @@ return {
             local path = node.type == 'directory' and node.path or vim.fn.fnamemodify(node.path, ':h')
             require('toggleterm.terminal').Terminal:new({ dir = path, direction = 'horizontal' }):toggle()
           end,
+        },
+      },
+    },
+    trevy_changes = {
+      repos_root = vim.fn.expand('~/code/trevy'),
+      repo_glob = '*/.git',
+      bind_to_cwd = false,
+      hide_root_node = true,
+      window = {
+        mappings = {
+          ['<cr>'] = 'open_diffview',
+          ['l'] = 'open_diffview',
+          ['o'] = 'open_diffview',
+          ['p'] = 'toggle_preview',
+          ['h'] = 'close_node',
+          ['\\'] = 'close_window',
+          ['R'] = 'refresh',
+          ['D'] = 'open_repo_diff',
         },
       },
     },

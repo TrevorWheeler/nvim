@@ -108,6 +108,38 @@ vim.api.nvim_create_autocmd("FileType", {
 
 vim.keymap.set("n", "<leader>td", "<cmd>edit ~/code/trevy/todos/todos.md<cr>", { desc = "[T]odo [D]oc" })
 vim.keymap.set("n", "<leader>qq", "<cmd>qa<cr>", { desc = "[Q]uit all" })
+vim.keymap.set("n", "<leader>gg", function()
+  local preview = require("custom.trevy_changes_preview")
+  local manager = require("neo-tree.sources.manager")
+  local renderer = require("neo-tree.ui.renderer")
+  local command = require("neo-tree.command")
+
+  local state = manager.get_state("trevy_changes")
+  if renderer.window_exists(state) then
+    preview.disable()
+    command.execute({
+      action = "close",
+      source = "trevy_changes",
+      position = "left",
+    })
+    return
+  end
+
+  command.execute({
+    action = "focus",
+    source = "trevy_changes",
+    position = "left",
+  })
+
+  vim.schedule(function()
+    local open_state = manager.get_state("trevy_changes")
+    if open_state and open_state.tree and open_state.bufnr and open_state.winid then
+      vim.api.nvim_set_current_win(open_state.winid)
+      preview.focus_first_file(open_state)
+      preview.enable_live(open_state)
+    end
+  end)
+end, { desc = "[G]it [G]lobal changes" })
 vim.keymap.set("n", "<leader>ye", function()
   local diagnostics = vim.diagnostic.get(0, { lnum = vim.fn.line(".") - 1 })
   if #diagnostics == 0 then
@@ -118,6 +150,13 @@ vim.keymap.set("n", "<leader>ye", function()
   vim.fn.setreg("+", msg)
   vim.notify("Yanked: " .. msg, vim.log.levels.INFO)
 end, { desc = "[Y]ank [E]rror" })
+
+vim.cmd([[
+  cnoreabbrev <expr> q v:lua.require("custom.diffview_quit").cmd_abbrev()
+  cnoreabbrev <expr> quit v:lua.require("custom.diffview_quit").cmd_abbrev()
+  cnoreabbrev <expr> q! v:lua.require("custom.diffview_quit").cmd_abbrev()
+  cnoreabbrev <expr> quit! v:lua.require("custom.diffview_quit").cmd_abbrev()
+]])
 
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
   group = vim.api.nvim_create_augroup("CheckExternalChanges", { clear = true }),
