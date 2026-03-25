@@ -1,1 +1,4 @@
 WRN 2026-03-23T10:29:51.900 ?.62340    server_start:199: Failed to start server: operation not permitted: /var/folders/jp/mqbzc53d25d8j_j__py_8b800000gn/T/nvim.trev/2ZipvY/nvim.62340.0
+WRN 2026-03-23T17:56:57.023 ?.77534    server_start:199: Failed to start server: operation not permitted: /var/folders/jp/mqbzc53d25d8j_j__py_8b800000gn/T/nvim.trev/5OQBMw/nvim.77534.0
+WRN 2026-03-23T18:03:07.981 ?.83440    server_start:199: Failed to start server: operation not permitted: /var/folders/jp/mqbzc53d25d8j_j__py_8b800000gn/T/nvim.trev/TxxEoc/nvim.83440.0
+WRN 2026-03-25T14:48:19.917 ?.25284    server_start:199: Failed to start server: operation not permitted: /var/folders/jp/mqbzc53d25d8j_j__py_8b800000gn/T/nvim.trev/ubMnjl/nvim.25284.0

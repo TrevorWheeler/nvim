@@ -95,7 +95,8 @@ vim.g.have_nerd_font = true
 
 vim.opt.autoread = true
 vim.opt.updatetime = 300
-vim.opt.wrap = false
+vim.opt.wrap = true
+vim.opt.linebreak = true
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "markdown",
@@ -167,6 +168,116 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHo
   end,
 })
 
+vim.api.nvim_create_autocmd("FileChangedShellPost", {
+  group = vim.api.nvim_create_augroup("RefreshNeoTreeOnExternalChange", { clear = true }),
+  callback = function(args)
+    vim.schedule(function()
+      pcall(function()
+        require("neo-tree.sources.manager").refresh("filesystem")
+      end)
+
+      local ok, lint = pcall(require, "lint")
+      if ok and vim.api.nvim_buf_is_valid(args.buf) and vim.bo[args.buf].modifiable then
+        vim.api.nvim_buf_call(args.buf, function()
+          lint.try_lint()
+        end)
+      end
+    end)
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("TightUtilityBufferScroll", { clear = true }),
+  pattern = { "mason", "lazy", "neo-tree", "qf", "help", "checkhealth" },
+  callback = function()
+    vim.opt_local.scrolloff = 0
+  end,
+})
+
+local function clamp_neo_tree_horizontal_scroll(winid)
+  if not vim.api.nvim_win_is_valid(winid) then
+    return
+  end
+
+  local bufnr = vim.api.nvim_win_get_buf(winid)
+  if not vim.api.nvim_buf_is_valid(bufnr) or vim.bo[bufnr].filetype ~= "neo-tree" then
+    return
+  end
+
+  local view = vim.api.nvim_win_call(winid, vim.fn.winsaveview)
+  if not view or view.leftcol == nil then
+    return
+  end
+
+  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  local longest = 0
+  for _, line in ipairs(lines) do
+    longest = math.max(longest, vim.fn.strdisplaywidth(line))
+  end
+
+  local win_width = vim.api.nvim_win_get_width(winid)
+  local max_leftcol = math.max(0, longest - win_width)
+  if view.leftcol <= max_leftcol then
+    return
+  end
+
+  view.leftcol = max_leftcol
+  vim.api.nvim_win_call(winid, function()
+    vim.fn.winrestview(view)
+  end)
+end
+
+vim.api.nvim_create_autocmd({ "WinScrolled", "BufWinEnter", "CursorMoved" }, {
+  group = vim.api.nvim_create_augroup("ClampNeoTreeHorizontalScroll", { clear = true }),
+  callback = function()
+    vim.schedule(function()
+      clamp_neo_tree_horizontal_scroll(vim.api.nvim_get_current_win())
+    end)
+  end,
+})
+
+local function clamp_window_to_eof(winid)
+  if not vim.api.nvim_win_is_valid(winid) then
+    return
+  end
+
+  local bufnr = vim.api.nvim_win_get_buf(winid)
+  if not vim.api.nvim_buf_is_valid(bufnr) or vim.bo[bufnr].buftype ~= "" then
+    return
+  end
+
+  local view, last_line, bottom_line, win_height = vim.api.nvim_win_call(winid, function()
+    return vim.fn.winsaveview(), vim.fn.line("$"), vim.fn.line("w$"), vim.fn.winheight(0)
+  end)
+
+  if not view or not view.topline or not last_line or not bottom_line or not win_height then
+    return
+  end
+
+  if bottom_line <= last_line then
+    return
+  end
+
+  local target_topline = math.max(1, last_line - win_height + 1)
+  if view.topline == target_topline then
+    return
+  end
+
+  view.topline = target_topline
+  vim.api.nvim_win_call(winid, function()
+    vim.fn.winrestview(view)
+  end)
+end
+
+vim.api.nvim_create_autocmd({ "CursorMoved", "WinScrolled", "BufWinEnter" }, {
+  group = vim.api.nvim_create_augroup("ClampScrollPastEOF", { clear = true }),
+  callback = function()
+    vim.schedule(function()
+      clamp_window_to_eof(vim.api.nvim_get_current_win())
+    end)
+  end,
+})
+
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
@@ -231,7 +342,7 @@ vim.o.inccommand = 'split'
 vim.o.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.o.scrolloff = 10
+vim.o.scrolloff = 3
 
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s)

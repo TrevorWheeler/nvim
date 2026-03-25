@@ -323,6 +323,18 @@ M.setup = function(config, global_config)
   })
 
   manager.subscribe(M.name, {
+    event = events.FS_EVENT,
+    handler = function(args)
+      local changed_path = args and args.afile or ""
+      local repos_root = vim.fn.expand(config.repos_root or "~/code/trevy")
+      if changed_path ~= "" and utils.is_subpath(repos_root, changed_path) then
+        clear_cache()
+        manager.refresh(M.name)
+      end
+    end,
+  })
+
+  manager.subscribe(M.name, {
     event = events.VIM_BUFFER_CHANGED,
     handler = function()
       clear_cache()

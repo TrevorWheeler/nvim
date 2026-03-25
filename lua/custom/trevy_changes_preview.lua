@@ -173,6 +173,20 @@ function M.enable_live(state)
       M.preview_current(state)
     end,
   })
+  vim.api.nvim_create_autocmd("WinClosed", {
+    group = preview_state.augroup,
+    pattern = tostring(state.winid),
+    callback = function()
+      M.disable()
+    end,
+  })
+  vim.api.nvim_create_autocmd({ "BufHidden", "BufWipeout" }, {
+    group = preview_state.augroup,
+    buffer = state.bufnr,
+    callback = function()
+      M.disable()
+    end,
+  })
 
   M.preview_current(state)
 end
